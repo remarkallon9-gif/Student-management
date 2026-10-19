@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Management System</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f1f5f9;margin:0;padding:20px}
+.container{max-width:700px;margin:30px auto;background:#fff;padding:25px;border-radius:12px;box-shadow:0 4px 12px #0002}
+h1{text-align:center;color:#1d4ed8}
+input,button{box-sizing:border-box;width:100%;padding:12px;margin:6px 0;border-radius:6px;font-size:16px}
+input{border:1px solid #cbd5e1}
+button{background:#2563eb;color:#fff;border:none;cursor:pointer}
+button:hover{background:#1d4ed8}
+table{width:100%;border-collapse:collapse;margin-top:20px}
+th,td{padding:10px;border:1px solid #ddd;text-align:left;overflow-wrap:anywhere}
+th{background:#1d4ed8;color:#fff}
+.delete{background:#dc2626;padding:8px}
+@media(max-width:520px){.container{padding:15px;margin:10px auto}th,td{padding:6px;font-size:13px}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Student Management System</h1>
+<p>Add and manage student records.</p>
+<form id="studentForm">
+<input id="studentId" placeholder="Student ID" required>
+<input id="studentName" placeholder="Full Name" required>
+<input id="course" placeholder="Course / Year" required>
+<button type="submit">Add Student</button>
+</form>
+<h3>Student Records</h3>
+<table>
+<thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Action</th></tr></thead>
+<tbody id="studentList"></tbody>
+</table>
+</div>
+<script>
+const form=document.getElementById("studentForm");
+const studentList=document.getElementById("studentList");
+let students=[];
+function displayStudents(){
+  studentList.innerHTML="";
+  students.forEach((student,index)=>{
+    const row=document.createElement("tr");
+    [student.id,student.name,student.course].forEach(value=>{
+      const cell=document.createElement("td"); cell.textContent=value; row.appendChild(cell);
+    });
+    const actionCell=document.createElement("td");
+    const deleteButton=document.createElement("button");
+    deleteButton.textContent="Delete"; deleteButton.className="delete";
+    deleteButton.addEventListener("click",()=>{students.splice(index,1);displayStudents();});
+    actionCell.appendChild(deleteButton);row.appendChild(actionCell);studentList.appendChild(row);
+  });
+}
+form.addEventListener("submit",event=>{
+  event.preventDefault();
+  const id=document.getElementById("studentId").value.trim();
+  const name=document.getElementById("studentName").value.trim();
+  const course=document.getElementById("course").value.trim();
+  if(students.some(student=>student.id===id)){alert("Student ID already exists!");return;}
+  students.push({id,name,course});displayStudents();form.reset();
+});
+</script>
+</body>
+</html>
